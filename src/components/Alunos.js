@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Form } from "react-bootstrap";
+import { Table, Button, Form, Modal } from "react-bootstrap";
 
 class Alunos extends React.Component {
 
@@ -10,9 +10,8 @@ class Alunos extends React.Component {
             id: 0,
             nome: '',
             email: '',
-            alunos: [
-
-            ]
+            alunos: [],
+            modalAberto: false
         }
     }
 
@@ -45,38 +44,39 @@ class Alunos extends React.Component {
         fetch("https://6971465278fec16a63007800.mockapi.io/alunos/" + id, { method: 'GET' })
             .then(resposta => resposta.json())
             .then(aluno => {
-                this.setState({ id: aluno.id, nome: aluno.nome, email: aluno.email})
+                this.setState({ id: aluno.id, nome: aluno.nome, email: aluno.email })
             });
+            this.abrirModal();
     }
 
     cadastrarAluno = (aluno) => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/", { 
+        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/", {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(aluno)
-         })
-        .then(resposta => {
-            if (resposta.ok) {
-                this.buscarAluno();
-            } else {
-                alert("Não foi possivel adicionar o aluno");
-            }
-        });
+        })
+            .then(resposta => {
+                if (resposta.ok) {
+                    this.buscarAluno();
+                } else {
+                    alert("Não foi possivel adicionar o aluno");
+                }
+            });
     }
 
     atualizarAluno = (aluno) => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/" +aluno.id, { 
+        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/" + aluno.id, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(aluno)
-         })
+        })
             .then(resposta => {
                 if (resposta.ok) {
                     this.buscarAluno();
                 } else {
                     alert("Não foi possivel atualizar os dados do aluno");
                 }
-        });
+            });
     }
 
     renderTabela() {
@@ -124,22 +124,24 @@ class Alunos extends React.Component {
     submit = (e) => {
         e.preventDefault();
 
-        if(this.state.id === 0){
+        if (this.state.id === 0) {
             const aluno = {
-            nome: this.state.nome,
-            email: this.state.email
+                nome: this.state.nome,
+                email: this.state.email
+            }
+
+            this.cadastrarAluno(aluno);
+        } else {
+            const aluno = {
+                id: this.state.id,
+                nome: this.state.nome,
+                email: this.state.email
+            }
+
+            this.atualizarAluno(aluno);
         }
 
-        this.cadastrarAluno(aluno);
-        }else {
-            const aluno = {
-            id: this.state.id,
-            nome: this.state.nome,
-            email: this.state.email
-        }
-
-        this.atualizarAluno(aluno);
-        }
+        this.fecharModal();
 
     }
 
@@ -153,6 +155,20 @@ class Alunos extends React.Component {
                 email: ''
             }
         )
+
+        this.abrirModal();
+    }
+
+    fecharModal = () => {
+        this.setState({
+            modalAberto: false
+        });
+    }
+
+    abrirModal = () => {
+        this.setState({
+            modalAberto: true
+        });
     }
 
 
@@ -161,33 +177,47 @@ class Alunos extends React.Component {
         return (
             <div>
 
-                <Form>
-                    <Form.Group className="mb-3">
-                        <Form.Label>ID</Form.Label>
-                        <Form.Control type="text" value={this.state.id} readOnly={true} />
-                    </Form.Group>
+                <Modal show={this.state.modalAberto} onHide={this.fecharModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Dados do aluno</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Nome</Form.Label>
-                        <Form.Control type="text" placeholder="Digite o nome do aluno" value={this.state.nome} onChange={this.atualizaNome}/>
-                    </Form.Group>
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>ID</Form.Label>
+                                <Form.Control type="text" value={this.state.id} readOnly={true} />
+                            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Digite o email do aluno" value={this.state.email} onChange={this.atualizaEmail}/>
-                        <Form.Text className="text-muted">
-                            Utilize o melhor e-mail do aluno.
-                        </Form.Text>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Nome</Form.Label>
+                                <Form.Control type="text" placeholder="Digite o nome do aluno" value={this.state.nome} onChange={this.atualizaNome} />
+                            </Form.Group>
 
-                    </Form.Group>
-                    <Button variant="primary" type="submit" onClick={this.submit}>
-                        Salvar
-                    </Button>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control type="email" placeholder="Digite o email do aluno" value={this.state.email} onChange={this.atualizaEmail} />
+                                <Form.Text className="text-muted">
+                                    Utilize o melhor e-mail do aluno.
+                                </Form.Text>
 
-                    <Button variant="warning" type="button" onClick={this.reset}>
-                        Novo
-                    </Button>
-                </Form>
+                            </Form.Group>
+                        </Form>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.fecharModal}>
+                            Close
+                        </Button>
+                        <Button variant="primary" type="submit" onClick={this.submit}>
+                            Salvar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                <Button variant="warning" type="button" onClick={this.reset}>
+                    Novo
+                </Button>
 
                 {this.renderTabela()}
             </div>
