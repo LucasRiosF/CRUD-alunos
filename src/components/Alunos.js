@@ -15,6 +15,26 @@ class Alunos extends React.Component {
         }
     }
 
+    validarFormulario(nome, email) {
+        if (!nome || nome.trim() === "") {
+            alert("Preencha o nome!");
+            return false;
+        }
+
+        if (!email || email.trim() === "") {
+            alert("Preencha o email!");
+            return false;
+        }
+
+        if (!email.includes("@") || !email.includes(".")) {
+            alert("Email inválido!");
+            return false;
+        }
+
+        return true;
+
+    }
+
     componentDidMount() {
         this.buscarAluno();
     }
@@ -46,7 +66,7 @@ class Alunos extends React.Component {
             .then(aluno => {
                 this.setState({ id: aluno.id, nome: aluno.nome, email: aluno.email })
             });
-            this.abrirModal();
+        this.abrirModal();
     }
 
     cadastrarAluno = (aluno) => {
@@ -78,6 +98,7 @@ class Alunos extends React.Component {
                 }
             });
     }
+
 
     renderTabela() {
         return <Table striped bordered hover>
@@ -124,6 +145,12 @@ class Alunos extends React.Component {
     submit = (e) => {
         e.preventDefault();
 
+        const valido = this.validarFormulario(this.state.nome, this.state.email);
+
+        if (!valido) {
+            return;
+        }
+        
         if (this.state.id === 0) {
             const aluno = {
                 nome: this.state.nome,
@@ -170,7 +197,6 @@ class Alunos extends React.Component {
             modalAberto: true
         });
     }
-
 
 
     render() {
