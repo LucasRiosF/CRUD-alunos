@@ -1,5 +1,7 @@
 import React from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
+import { buscarAlunos, atualizarAluno, deletarAlunos, cadastrarAlunos } from "../service/alunosService";
+import { validarAluno } from "../utils/validarAluno";
 
 class Alunos extends React.Component {
 
@@ -15,26 +17,6 @@ class Alunos extends React.Component {
         }
     }
 
-    validarFormulario(nome, email) {
-        if (!nome || nome.trim() === "") {
-            alert("Preencha o nome!");
-            return false;
-        }
-
-        if (!email || email.trim() === "") {
-            alert("Preencha o email!");
-            return false;
-        }
-
-        if (!email.includes("@") || !email.includes(".")) {
-            alert("Email inválido!");
-            return false;
-        }
-
-        return true;
-
-    }
-
     componentDidMount() {
         this.buscarAluno();
     }
@@ -43,21 +25,17 @@ class Alunos extends React.Component {
 
     }
 
-    buscarAluno = () => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos")
-            .then(resposta => resposta.json())
-            .then(dados => {
-                this.setState({ alunos: dados })
-            });
-    };
+    buscarAluno = async () => {
+        const alunos = await buscarAlunos();
+        this.setState({ alunos });
+    }
 
-    deletarAluno = (id) => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/" + id, { method: 'DELETE' })
-            .then(resposta => {
-                if (resposta.ok) {
-                    this.buscarAluno();
-                }
-            });
+    deletarAluno = async (id) => {
+        const resposta = await deletarAlunos(id);
+
+        if (resposta) {
+            this.buscarAluno();
+        }
     }
 
     atualizarDados = (id) => {
@@ -69,34 +47,24 @@ class Alunos extends React.Component {
         this.abrirModal();
     }
 
-    cadastrarAluno = (aluno) => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(aluno)
-        })
-            .then(resposta => {
-                if (resposta.ok) {
-                    this.buscarAluno();
-                } else {
-                    alert("Não foi possivel adicionar o aluno");
-                }
-            });
+    cadastrarAluno = async (aluno) => {
+        const resposta = await cadastrarAlunos(aluno)
+
+        if (resposta) {
+            this.buscarAluno()
+        } else {
+            alert("Não foi possivel adicionar o aluno");
+        }
     }
 
-    atualizarAluno = (aluno) => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/" + aluno.id, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(aluno)
-        })
-            .then(resposta => {
-                if (resposta.ok) {
-                    this.buscarAluno();
-                } else {
-                    alert("Não foi possivel atualizar os dados do aluno");
-                }
-            });
+    atualizarAluno = async (aluno) => {
+        const resposta = await atualizarAluno(aluno);
+
+        if (resposta) {
+            this.buscarAluno()
+        } else {
+            alert("Não foi possivel atualizar os dados do aluno");
+        }
     }
 
 
@@ -112,7 +80,7 @@ class Alunos extends React.Component {
             <tbody>
                 {
                     this.state.alunos.map((aluno) =>
-                        <tr>
+                        <tr key={aluno.id}>
                             <td>{aluno.nome}</td>
                             <td>{aluno.email}</td>
                             <td>
@@ -145,12 +113,12 @@ class Alunos extends React.Component {
     submit = (e) => {
         e.preventDefault();
 
-        const valido = this.validarFormulario(this.state.nome, this.state.email);
-
-        if (!valido) {
+        const resultado = validarAluno(this.state.nome, this.state.email)
+        if (!resultado.valido) {
+            alert(resultado.mensagem);
             return;
         }
-        
+
         if (this.state.id === 0) {
             const aluno = {
                 nome: this.state.nome,
