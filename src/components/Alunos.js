@@ -4,6 +4,7 @@ import { buscarAlunos, atualizarAluno, deletarAlunos, cadastrarAlunos } from "..
 import { validarAluno } from "../utils/validarAluno";
 import AlunosTabela from "./AlunosTable";
 import AlunosModal from "./AlunosModal";
+import "./alunos.css"
 
 class Alunos extends React.Component {
 
@@ -144,7 +145,7 @@ class Alunos extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="alunos-container">
 
                 <AlunosModal 
                 show={this.state.modalAberto}

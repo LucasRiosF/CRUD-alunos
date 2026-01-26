@@ -1,9 +1,10 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
+import "./alunos.css"
 
 function AlunosTabela({ alunos, Atualizar, Excluir }) {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover className="alunos-table">
             <thead>
                 <tr>
                     <th>Nome</th>
