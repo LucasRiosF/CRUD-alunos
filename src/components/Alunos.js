@@ -2,6 +2,8 @@ import React from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { buscarAlunos, atualizarAluno, deletarAlunos, cadastrarAlunos } from "../service/alunosService";
 import { validarAluno } from "../utils/validarAluno";
+import AlunosTabela from "./AlunosTable";
+import AlunosModal from "./AlunosModal";
 
 class Alunos extends React.Component {
 
@@ -65,33 +67,6 @@ class Alunos extends React.Component {
         } else {
             alert("Não foi possivel atualizar os dados do aluno");
         }
-    }
-
-
-    renderTabela() {
-        return <Table striped bordered hover>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Opções</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    this.state.alunos.map((aluno) =>
-                        <tr key={aluno.id}>
-                            <td>{aluno.nome}</td>
-                            <td>{aluno.email}</td>
-                            <td>
-                                <Button variant="secondary" onClick={() => this.atualizarDados(aluno.id)}>Atualizar</Button>
-                                <Button variant="danger" onClick={() => this.deletarAluno(aluno.id)}>Excluir</Button>
-                            </td>
-                        </tr>
-                    )
-                }
-            </tbody>
-        </Table>
     }
 
     atualizaNome = (e) => {
@@ -171,49 +146,25 @@ class Alunos extends React.Component {
         return (
             <div>
 
-                <Modal show={this.state.modalAberto} onHide={this.fecharModal}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Dados do aluno</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
+                <AlunosModal 
+                show={this.state.modalAberto}
+                hide={this.fecharModal}
+                id={this.state.id}
+                nome={this.state.nome}
+                onChangeNome={this.atualizaNome}
+                email={this.state.email}
+                onChangeEmail={this.atualizaEmail}
+                fechar={this.fecharModal}
+                salvar={this.submit}
+                novo={this.reset}
+                />
 
-                        <Form>
-                            <Form.Group className="mb-3">
-                                <Form.Label>ID</Form.Label>
-                                <Form.Control type="text" value={this.state.id} readOnly={true} />
-                            </Form.Group>
+                <AlunosTabela
+                alunos={this.state.alunos}
+                Atualizar={this.atualizarDados}
+                Excluir={this.deletarAluno}
+                />
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>Nome</Form.Label>
-                                <Form.Control type="text" placeholder="Digite o nome do aluno" value={this.state.nome} onChange={this.atualizaNome} />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control type="email" placeholder="Digite o email do aluno" value={this.state.email} onChange={this.atualizaEmail} />
-                                <Form.Text className="text-muted">
-                                    Utilize o melhor e-mail do aluno.
-                                </Form.Text>
-
-                            </Form.Group>
-                        </Form>
-
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.fecharModal}>
-                            Close
-                        </Button>
-                        <Button variant="primary" type="submit" onClick={this.submit}>
-                            Salvar
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Button variant="warning" type="button" onClick={this.reset}>
-                    Novo
-                </Button>
-
-                {this.renderTabela()}
             </div>
         );
     }
