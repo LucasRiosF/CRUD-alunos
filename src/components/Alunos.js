@@ -1,6 +1,5 @@
 import React from "react";
-import { Table, Button, Form, Modal } from "react-bootstrap";
-import { buscarAlunos, atualizarAluno, deletarAlunos, cadastrarAlunos } from "../service/alunosService";
+import { buscarAlunos, cadastrarAlunos, atualizarAluno, deletarAlunos, buscarAlunoPorID } from "../service/alunosService"
 import { validarAluno } from "../utils/validarAluno";
 import AlunosTabela from "./AlunosTable";
 import AlunosModal from "./AlunosModal";
@@ -41,13 +40,17 @@ class Alunos extends React.Component {
         }
     }
 
-    atualizarDados = (id) => {
-        fetch("https://6971465278fec16a63007800.mockapi.io/alunos/" + id, { method: 'GET' })
-            .then(resposta => resposta.json())
-            .then(aluno => {
-                this.setState({ id: aluno.id, nome: aluno.nome, email: aluno.email })
-            });
-        this.abrirModal();
+    atualizarDados = async (id) => {
+        console.log("ID enviado para API:", id);
+        const aluno = await buscarAlunoPorID(id);
+
+        this.setState({
+            id: aluno.id,
+            nome: aluno.nome,
+            email: aluno.email
+        })
+
+        this.abrirModal()
     }
 
     cadastrarAluno = async (aluno) => {
