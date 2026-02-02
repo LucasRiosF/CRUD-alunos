@@ -1,27 +1,20 @@
 import './App.css';
-import Home from './components/Home';
-import Alunos from './components/Alunos';
+import Home from './pages/Home';
+import Alunos from './pages/Alunos';
 import { BrowserRouter, Routes, Link, Route } from 'react-router-dom'
-import { Nav } from 'react-bootstrap';
+import Menu from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="App">
-    <h1>CRUD</h1>
     <BrowserRouter>
+      <Menu />
 
-    <Nav variant='tabs'>
-      <Nav.Link as={Link} to={"/"}>Página inicial</Nav.Link>
-      <Nav.Link as={Link} to={"/Alunos"}>Página de Alunos</Nav.Link>
-    </Nav>
-
-    <Routes>
-      <Route path='/' element={<Home/>}></Route>
-      <Route path='/alunos' element={<Alunos/>}></Route>
-    </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/alunos" element={<Alunos />} />
+      </Routes>
     </BrowserRouter>
-    </div>
   );
 }
 

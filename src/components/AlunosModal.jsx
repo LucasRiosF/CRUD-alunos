@@ -1,10 +1,14 @@
 import React from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
-import "./alunos.css"
+import "../pages/alunos.css"
 
 function AlunosModal({ show, hide, id, nome, email, onChangeEmail, onChangeNome, fechar, salvar, novo}) {
     return (
         <div>
+            <Button variant="warning" type="button" onClick={novo} className="botaoModal">
+                 + Novo Aluno
+            </Button>
+
             <Modal show={show} onHide={hide} className="modal-header">
                 <Modal.Header closeButton>
                     <Modal.Title className="modal-title">Dados do aluno</Modal.Title>
@@ -35,17 +39,13 @@ function AlunosModal({ show, hide, id, nome, email, onChangeEmail, onChangeNome,
                 </Modal.Body>
                 <Modal.Footer className="modal-footer">
                     <Button variant="secondary" onClick={fechar}>
-                        Close
+                        Cancelar
                     </Button>
                     <Button variant="primary" type="submit" onClick={salvar}>
                         Salvar
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            <Button variant="warning" type="button" onClick={novo} className="botaoModal">
-                Cadastrar +
-            </Button>
         </div>
 
     );

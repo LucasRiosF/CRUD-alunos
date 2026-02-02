@@ -1,8 +1,9 @@
 import React from "react";
 import { buscarAlunos, cadastrarAlunos, atualizarAluno, deletarAlunos, buscarAlunoPorID } from "../service/alunosService"
 import { validarAluno } from "../utils/validarAluno";
-import AlunosTabela from "./AlunosTable";
-import AlunosModal from "./AlunosModal";
+import AlunosTabela from "../components/AlunosTable";
+import AlunosModal from "../components/AlunosModal";
+import Menu from "../components/Navbar";
 import "./alunos.css"
 
 class Alunos extends React.Component {
@@ -21,10 +22,6 @@ class Alunos extends React.Component {
 
     componentDidMount() {
         this.buscarAluno();
-    }
-
-    componentWillUnmount() {
-
     }
 
     buscarAluno = async () => {
@@ -148,7 +145,11 @@ class Alunos extends React.Component {
 
     render() {
         return (
+            <>
+            <Menu abrirModal={this.reset}/>
             <div className="alunos-container">
+
+                <h3>Lista de Alunos</h3>
 
                 <AlunosModal 
                 show={this.state.modalAberto}
@@ -170,6 +171,7 @@ class Alunos extends React.Component {
                 />
 
             </div>
+            </>
         );
     }
 }

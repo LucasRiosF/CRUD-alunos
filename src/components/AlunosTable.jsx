@@ -1,15 +1,15 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
-import "./alunos.css"
+import "../pages/alunos.css"
 
 function AlunosTabela({ alunos, Atualizar, Excluir }) {
     return (
-        <Table striped bordered hover className="alunos-table">
+        <Table striped bordered hover className="alunos-table shadow-sm">
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Email</th>
-                    <th>Opções</th>
+                    <th className="opcoes">Opções</th>
                 </tr>
             </thead>
             <tbody>
