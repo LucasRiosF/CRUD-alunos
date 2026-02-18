@@ -1,4 +1,6 @@
 import React from "react";
+import { Form, InputGroup } from "react-bootstrap";
+import { FaSearch } from "react-icons/fa";
 import { buscarAlunos, cadastrarAlunos, atualizarAluno, deletarAlunos, buscarAlunoPorID } from "../service/alunosService"
 import { validarAluno } from "../utils/validarAluno";
 import AlunosTabela from "../components/AlunosTable";
@@ -15,6 +17,7 @@ class Alunos extends React.Component {
             id: 0,
             nome: '',
             email: '',
+            busca: '',
             alunos: [],
             modalAberto: false
         }
@@ -144,33 +147,55 @@ class Alunos extends React.Component {
 
 
     render() {
+
+        const alunosFiltrados = this.state.alunos.filter((item) => {
+            return (
+                item.nome.toLowerCase().includes(this.state.busca.toLowerCase())
+                ||
+                item.email.toLowerCase().includes(this.state.busca.toLowerCase())
+            );
+        });
+
+
         return (
             <>
-            <Menu abrirModal={this.reset}/>
-            <div className="alunos-container">
+                <Menu abrirModal={this.reset} />
+                <div className="alunos-container">
 
-                <h3>Lista de Alunos</h3>
+                    <h3>Lista de Alunos</h3>
 
-                <AlunosModal 
-                show={this.state.modalAberto}
-                hide={this.fecharModal}
-                id={this.state.id}
-                nome={this.state.nome}
-                onChangeNome={this.atualizaNome}
-                email={this.state.email}
-                onChangeEmail={this.atualizaEmail}
-                fechar={this.fecharModal}
-                salvar={this.submit}
-                novo={this.reset}
-                />
+                    <InputGroup className="mb-3">
+                        <InputGroup.Text>
+                            <FaSearch />
+                        </InputGroup.Text>
+                        <Form.Control
+                            type="text"
+                            placeholder="Pesquisar por nome ou email"
+                            value={this.state.busca}
+                            onChange={(e) => this.setState({ busca: e.target.value })}
+                        />
+                    </InputGroup>
 
-                <AlunosTabela
-                alunos={this.state.alunos}
-                Atualizar={this.atualizarDados}
-                Excluir={this.deletarAluno}
-                />
+                    <AlunosModal
+                        show={this.state.modalAberto}
+                        hide={this.fecharModal}
+                        id={this.state.id}
+                        nome={this.state.nome}
+                        onChangeNome={this.atualizaNome}
+                        email={this.state.email}
+                        onChangeEmail={this.atualizaEmail}
+                        fechar={this.fecharModal}
+                        salvar={this.submit}
+                        novo={this.reset}
+                    />
 
-            </div>
+                    <AlunosTabela
+                        alunos={alunosFiltrados}
+                        Atualizar={this.atualizarDados}
+                        Excluir={this.deletarAluno}
+                    />
+
+                </div>
             </>
         );
     }
