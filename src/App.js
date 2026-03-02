@@ -1,7 +1,7 @@
 import './App.css';
 import Home from './pages/Home';
 import Alunos from './pages/Alunos';
-import { BrowserRouter, Routes, Link, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Menu from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
