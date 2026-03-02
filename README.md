@@ -33,7 +33,9 @@ PostgreSQL (Banco de Dados)
 * Node.js
 * Express
 * PostgreSQL
-* pg (node-postgres)
+* Prisma
+* Supabase
+* Render
 
 ### Ferramentas
 
