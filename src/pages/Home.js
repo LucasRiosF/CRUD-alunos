@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import Menu from "../components/Navbar"
 import "./home.css"
 

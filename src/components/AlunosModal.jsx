@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import "../pages/alunos.css"
 
 function AlunosModal({ show, hide, id, nome, email, onChangeEmail, onChangeNome, fechar, salvar, novo}) {
